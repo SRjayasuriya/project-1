@@ -46,7 +46,11 @@ class Cart():
         product=self.session['cart']
         total=0
         for id,quantity in product.items():
-            total+= int(quantity)*int(Product.objects.get(id=id).price)
+            product_object=Product.objects.get(id=id)
+            if(product_object.sale_price):
+                total+= int(quantity)*int(product_object.sale_price)
+            else:
+                total+= int(quantity)*int(product_object.price)
         return total
 
 
