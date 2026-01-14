@@ -2,8 +2,6 @@ from store.models import Product
 class Cart():
     def __init__(self,request):
         self.session = request.session
-        if('total' not in self.session):
-            self.session['total']=0
         self.cart = self.session.get('cart', {})
 
 
@@ -12,7 +10,6 @@ class Cart():
         product_qty = str(quantity)                  
         if product_id not in self.cart:
             self.cart[product_id] = product_qty
-            self.session['total']+=int(product_qty)*int(product.price)
         self.session['cart'] = self.cart   
         self.session.modified = True
         return self.cart
@@ -34,7 +31,6 @@ class Cart():
     def update(self, product, quantity):
         product_id=str(product)
         product_qty=str(quantity)
-        self.session['total']+= (int(product_qty)-int(self.cart[product_id])) * int(Product.objects.get(id=product_id).price)
         self.cart[product_id]=product_qty
         self.session.modified=True
         return self.cart
@@ -42,11 +38,16 @@ class Cart():
     def remove(self, product):
         product_id=str(product)
         if product_id in self.cart:
-            self.session['total']-=int(self.cart[product_id])*int(Product.objects.get(id=product_id).price)
             del self.cart[product_id]
             self.session.modified = True
             return self.cart
     
     def total(self):
-        return self.session['total']
+        product=self.session['cart']
+        total=0
+        for id,quantity in product.items():
+            total+= int(quantity)*int(Product.objects.get(id=id).price)
+        return total
+
+
 
