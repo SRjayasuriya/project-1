@@ -3,9 +3,9 @@ from . import models as m
 from django.contrib.auth import authenticate, login ,logout 
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm   
+from django.contrib.auth.forms import UserCreationForm
 from django import forms 
-from .form import SignUpForm 
+from .form import SignUpForm, UpdateUserForm
 
 def home(request):
     products=m.Product.objects.all()
@@ -65,4 +65,17 @@ def category(request,foo):
         return render(request,'category.html',{'products':products,'category':category})
     except:
         messages.success(request,('Category Not Found!'))
+        return redirect('home')
+    
+def update_user(request):
+    if request.user.is_authenticated:
+        current_user=User.objects.get(id=request.user.id)
+        user_form = UpdateUserForm(request.POST or None, instance=current_user)
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request,('Profile Updated Successfully!'))
+            return redirect('home')
+        return render(request,"update_user.html",{'user_form':user_form})
+    else:
+        messages.success(request,'You Must Be Logged In To View This Page!')
         return redirect('home')
