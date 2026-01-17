@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms 
-from .form import SignUpForm, UpdateUserForm
+from .form import SignUpForm, UpdateUserForm, ChangePasswordForm, UpdateInfoForm
+import json
 
 def home(request):
     products=m.Product.objects.all()
@@ -21,6 +22,11 @@ def login_user(request):
         user=authenticate(request,username=username,password=password)
         if user:
             login(request,user)
+            user = m.Profile.objects.get(user=request.user)
+            if user.old_cart:
+                cart=json.loads(user.old_cart)
+                request.session['cart']=cart
+                request.session.modified = True   
             messages.success(request,('You Have Been Logged In!'))
             return redirect('home')
         else:
@@ -69,8 +75,8 @@ def category(request,foo):
     
 def update_user(request):
     if request.user.is_authenticated:
-        current_user=User.objects.get(id=request.user.id)
-        user_form = UpdateUserForm(request.POST or None, instance=current_user)
+        current_user=request.user
+        user_form = UpdateUserForm(data = request.POST or None, instance=current_user)
         if user_form.is_valid():
             user_form.save()
             messages.success(request,('Profile Updated Successfully!'))
@@ -78,4 +84,46 @@ def update_user(request):
         return render(request,"update_user.html",{'user_form':user_form})
     else:
         messages.success(request,'You Must Be Logged In To View This Page!')
-        return redirect('home')
+        return redirect('login')
+    
+def update_password(request):
+    if request.user.is_authenticated:
+        current_user=request.user
+        if request.method=='POST':
+            form = ChangePasswordForm(user=current_user, data=request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Password Updated Successfully!")
+                login(request, current_user)
+                return redirect('update_user')
+            else:
+                for error in list(form.errors.values()):
+                    messages.error(request, error)
+                return redirect('update_password')
+        else:
+            return render(request,"update_password.html",{'Change_password_form':ChangePasswordForm(user=current_user)})
+    else:
+        messages.success(request,"You Must Be Logged In To View This Page!")
+        return redirect('login')
+
+def update_info(request):
+    if request.user.is_authenticated:
+        profile, created = m.Profile.objects.get_or_create(user=request.user)
+        if request.method=='POST':
+            info_form = UpdateInfoForm(data=request.POST, instance=profile)
+            if info_form.is_valid():
+                info_form.save()
+                messages.success(request,('Information Updated Successfully!'))
+                return redirect('home')
+            else:
+                messages.error(request,('Please Correct The Error Below.'))
+                return redirect('update_info')
+        else:
+            info_form = UpdateInfoForm(instance=profile)
+            return render(request,'update_info.html',{'info_form':info_form})
+    else:
+        messages.success(request,'You Must Be Logged In To View This Page!')
+        return redirect('login')
+    
+
+    

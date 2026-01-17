@@ -1,7 +1,8 @@
-from store.models import Product 
+from store.models import Product, Profile
 class Cart():
     def __init__(self,request):
         self.session = request.session
+        self.request = request
         self.cart = self.session.get('cart', {})
 
 
@@ -12,6 +13,13 @@ class Cart():
             self.cart[product_id] = product_qty
         self.session['cart'] = self.cart   
         self.session.modified = True
+
+        if self.request.user.is_authenticated:
+            user = Profile.objects.get(user_id=self.request.user.id)
+            store = str(self.cart)
+            store = store.replace('\'','\"')
+            user.old_cart = store
+            user.save()           
         return self.cart
 
     def __len__(self):
