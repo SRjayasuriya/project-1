@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login ,logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django import forms 
+from django import forms
 from .form import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
 from payment.form import ShippingForm 
 from payment.models import ShippingAddress
@@ -111,7 +111,7 @@ def update_password(request):
 def update_info(request):
     if request.user.is_authenticated:
         shipping, created = ShippingAddress.objects.get_or_create(user=request.user)
-        form, created = UserInfoForm.objects.get_or_create(user=request.user)
+        form, created = m.Profile.objects.get_or_create(user=request.user)
         if request.method=='POST':
             shipping_form = ShippingForm(data=request.POST, instance=shipping)
             form_details = UserInfoForm(data=request.POST, instance=form)
@@ -124,7 +124,7 @@ def update_info(request):
                 messages.error(request,('Please Correct The Error Below.'))
                 return redirect('update_info')
         else:
-            return render(request,'update_info.html',{'shipping_form':ShippingForm(instance=shipping)})
+            return render(request,'update_info.html',{'shipping_form':ShippingForm(instance=shipping),'form':UserInfoForm(instance=form)})
     else:
         messages.success(request,'You Must Be Logged In To View This Page!')
         return redirect('login')
