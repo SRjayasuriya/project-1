@@ -1,22 +1,22 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
 from django import forms
+from .models import Profile
 
-class UpdateInfoForm(forms.ModelForm):
-	phone = forms.CharField(label="", max_length=10, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone Number'}))
-	address1 = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Address Line 1'}))
-	address2 = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Address Line 2'}), required=False)			
-	city = forms.CharField(label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'City'}))
-	state = forms.CharField(label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'State'}))
-	country = forms.CharField(label="", max_length=50, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Country'}))
-	zipcode = forms.CharField(label="", max_length=10, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Zipcode'}))			
+class UserInfoForm(forms.ModelForm):
+	phone = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Phone'}), required=False)
+	address1 = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Address 1'}), required=False)
+	address2 = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Address 2'}), required=False)
+	city = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'City'}), required=False)
+	state = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'State'}), required=False)
+	zipcode = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Zipcode'}), required=False)
+	country = forms.CharField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Country'}), required=False)
 
 	class Meta:
-		model = User.profile.related.model  # Accessing Profile model through User
-		fields = ('phone', 'address1', 'address2', 'city', 'state', 'country', 'zipcode')
+		model = Profile
+		fields = ('phone', 'address1', 'address2', 'city', 'state', 'zipcode', 'country', )
 
-	def __init__(self, *args, **kwargs):
-		super(UpdateInfoForm, self).__init__(*args, **kwargs)
+
 
 class ChangePasswordForm(SetPasswordForm):
 	class Meta:

@@ -5,7 +5,9 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms 
-from .form import SignUpForm, UpdateUserForm, ChangePasswordForm, UpdateInfoForm
+from .form import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
+from payment.form import ShippingForm 
+from payment.models import ShippingAddress
 import json
 
 def home(request):
@@ -108,19 +110,21 @@ def update_password(request):
 
 def update_info(request):
     if request.user.is_authenticated:
-        profile, created = m.Profile.objects.get_or_create(user=request.user)
+        shipping, created = ShippingAddress.objects.get_or_create(user=request.user)
+        form, created = UserInfoForm.objects.get_or_create(user=request.user)
         if request.method=='POST':
-            info_form = UpdateInfoForm(data=request.POST, instance=profile)
-            if info_form.is_valid():
-                info_form.save()
+            shipping_form = ShippingForm(data=request.POST, instance=shipping)
+            form_details = UserInfoForm(data=request.POST, instance=form)
+            if shipping_form.is_valid() and form_details.is_valid():
+                shipping_form.save()
+                form_details.save()
                 messages.success(request,('Information Updated Successfully!'))
                 return redirect('home')
             else:
                 messages.error(request,('Please Correct The Error Below.'))
                 return redirect('update_info')
         else:
-            info_form = UpdateInfoForm(instance=profile)
-            return render(request,'update_info.html',{'info_form':info_form})
+            return render(request,'update_info.html',{'shipping_form':ShippingForm(instance=shipping)})
     else:
         messages.success(request,'You Must Be Logged In To View This Page!')
         return redirect('login')
