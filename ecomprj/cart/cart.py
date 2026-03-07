@@ -24,13 +24,12 @@ class Cart():
 
     def __len__(self):
         return len(self.cart)
-    
 
     def get_products(self):
         products_ids = self.cart.keys()
         product_in_cart = Product.objects.filter(id__in=products_ids)
         return product_in_cart
-    
+
 
     def get_quantity(self):
         return self.cart
@@ -51,7 +50,7 @@ class Cart():
             return self.cart
     
     def total(self):
-        product=self.session['cart']
+        product=self.cart
         total=0
         for id,quantity in product.items():
             product_object=Product.objects.get(id=id)

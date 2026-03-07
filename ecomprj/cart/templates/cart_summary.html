@@ -88,7 +88,10 @@
             </div>
             <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
         {% endif  %}
-        <center> <h3>Total: {{ total }} <h3/> <center/>
+        {% if total %}
+            <center> <h3>Total: ₹ {{ total }} <h3/> <center/>
+            <a href = "{% url 'checkout' %}" class="btn btn-primary">Checkout</a>
+        {% endif %}
         </div>
     </div>
 </section>

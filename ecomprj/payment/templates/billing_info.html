@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Header -->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Billing Info</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Enter Your Payment Info....</p>
+        </div>
+    </div>
+</header>
+<br/>
+<div class = "container">
+    <div class = 'row'>
+        <div class = "col-md-5 offset-md-3">
+            <div class="card">
+                <div class="card-header">
+                    Order Summary
+                </div>
+            <div class="card-body">
+                {% for name,price,quantity,total in products %}
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="flex-grow-1">
+                                {{ name }}
+                            </div>
+                            <div class="col-1 text-center fs-4 fw-bold">
+                                -
+                            </div>
+                            <div class="text-end" style="min-width: 160px;">
+                                ₹{{ price }} × {{ quantity }} = ₹{{ total }}
+                            </div>
+                        </div>
+                {% endfor %}
+                <br/><br/>
+               <center> 
+                    <h5>Total   -  ₹{{overall}}</h5>
+                </center>
+            </div>
+            </div>
+            <br/><br/>
+                <br/><br/>
+            <br/><br/>
+                <div class="card">
+                    <div class="card-header">
+                        Deliver Info
+                    </div>
+                    <div class="card-body">
+                        <p>Name: {{ shipping_form.delivery_full_name.value }}</p>
+                        <p>Email: {{ shipping_form.delivery_email.value }}</p>
+                        <p>Address Line 1: {{ shipping_form.delivery_address_line1.value }}</p>
+                        <p>Address Line 2: {{ form.delivery_address_line2.value }}</p>
+                        <p>City: {{ shipping_form.delivery_city.value }}</p>
+                        <p>State: {{ shipping_form.delivery_state.value }}</p>
+                        <p>Zip Code: {{ shipping_form.delivery_zip_code.value }}</p>
+                        <p>Country: {{ shipping_form.delivery_country.value }}</p>
+                        <p>Phone: {{ shipping_form.delivery_phone.value }}</p>
+                        <br/>
+                        <a href = "{% url 'checkout' %}" class = "btn btn-outline-secondary"> Update Delivery </a>
+                    </div>
+                </div>
+            <br/><br/>
+            <strong>Billing Information</strong>
+                <br/><br/>
+                <form method='POST' action='{% url 'process_payment' %}'>
+                    {% csrf_token %}
+                    {{ billing_form.as_p }}
+                <br/><br/>
+                <button type="submit" class="btn btn-secondary">
+                proceed to pay
+                </button>
+            </form>
+            <br/><br/>
+        </div>
+    </div>
+</div>
+{% endblock %}
