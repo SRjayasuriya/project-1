@@ -23,6 +23,7 @@ def process_payement(request):
             product=Product.objects.get(id=id)
             order_item = OrderItem.objects.create(user=request.user, order=order_id, product_id=id, quantity=quantity, price=product.price)
             order_item.save()
+        request.session['cart']={}
         messages.success(request,"Payment successful!")
         return redirect('home')
     else:
