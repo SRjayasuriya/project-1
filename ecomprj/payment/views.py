@@ -68,3 +68,74 @@ def billing_info(request):
     else:
         messages.success(request,"Access denied!")
         return redirect('home')
+
+def shipped_orders(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        orders = Order.objects.filter(shipped=True)
+        return render(request,'shipped_orders.html',{'orders':orders})
+    else:
+        messages.success(request,"Access denied!")
+        return redirect('home')
+
+def unshipped_orders(request):
+    if request.user.is_authenticated and request.user.is_superuser:
+        orders = Order.objects.filter(shipped=False)
+        return render(request,'unshipped_orders.html',{'orders':orders})
+    else:
+        messages.success(request,"Access denied!")
+        return redirect('home')
+    
+def order_details(request,order_id):
+    if request.user.is_authenticated and request.user.is_superuser:
+        order = Order.objects.get(id=order_id)
+        if order:
+            return render(request,'order_details.html',{'order':order})
+        else:
+            messages.success(request,"Order not found!")
+            return redirect('home')
+    else:
+        messages.success(request,"Access denied!")
+        return redirect('home')
+def mark_shipped(request,order_id):
+    if request.user.is_authenticated and request.user.is_superuser:
+        order = Order.objects.get(id=order_id)
+        if order:
+            order.shipped = True
+            order.save()
+            messages.success(request,"Order marked as shipped!")
+            return redirect('unshipped_orders')
+        else:
+            messages.success(request,"Order not found!")
+            return redirect('home')
+    else:
+        messages.success(request,"Access denied!")
+        return redirect('home')
+
+def mark_unshipped(request,order_id):
+    if request.user.is_authenticated and request.user.is_superuser:
+        order = Order.objects.get(id=order_id)
+        if order:
+            order.shipped = False
+            order.save()
+            messages.success(request,"Order marked as unshipped!")
+            return redirect('shipped_orders')
+        else:
+            messages.success(request,"Order not found!")
+            return redirect('home')
+    else:
+        messages.success(request,"Access denied!")
+        return redirect('home')
+    
+def delete_order(request,order_id):
+    if request.user.is_authenticated and request.user.is_superuser:
+        order = Order.objects.get(id=order_id)
+        if order:
+            order.delete()
+            messages.success(request,"Order deleted successfully!")
+            return redirect('unshipped_orders')
+        else:
+            messages.success(request,"Order not found!")
+            return redirect('home')
+    else:
+        messages.success(request,"Access denied!")
+        return redirect('home')

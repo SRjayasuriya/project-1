@@ -23,7 +23,6 @@ class ShippingAddress(models.Model):
 
     def __str__(self):
         return f"Shipping Addresses - {str(self.id)}"
-    
 
 class Order(models.Model):
 

@@ -34,9 +34,16 @@
                                 <li><a class="dropdown-item" href="{% url 'update_info' %}"> User Info </a></li>
                             </ul>
                             </li>
-
+                            {% if user.is_superuser %}
+                                <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Orders</a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <li><a class="dropdown-item" href="{% url 'shipped_orders' %}"> shipped_orders </a></li>
+                                            <li><a class="dropdown-item" href="{% url 'unshipped_orders' %}"> unshipped_orders </a></li>
+                                        </ul>
+                                </li>
+                            {% endif %}
                         {% endif %}
-
                         
                         <!-- here about is the name of the path and it will check entire url in the project (globally)-->
                         <li class="nav-item dropdown">
