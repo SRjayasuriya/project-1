@@ -1,4 +1,62 @@
+<<<<<<< HEAD
 .env
 *.sqlite3
 __pycache__/
 *.pyc
+=======
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Django
+*.log
+local_settings.py
+/staticfiles/
+/media/
+>>>>>>> 29a7cae3130cab7132e3dad27ed6b2e5e97f0e3d
