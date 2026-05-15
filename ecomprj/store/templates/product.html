@@ -1,77 +1,84 @@
 {% extends 'base.html' %}
+{% block content %}
 
-{% block content %}  
+<div class="container px-4 px-lg-5 my-5">
+    <div class="product-detail-wrap">
+        <div class="row g-0">
+            <!-- Image -->
+            <div class="col-md-5" style="background:var(--bg-secondary);overflow:hidden;min-height:350px">
+                <img src="{{ product.image.url }}" class="product-detail-img" alt="{{ product.name }}" />
+            </div>
+            <!-- Info -->
+            <div class="col-md-7">
+                <div class="product-detail-body">
+                    <p class="product-category mb-2">
+                        <i class="bi bi-tag me-1"></i>{{ product.category }}
+                    </p>
+                    <h1 class="product-detail-title">{{ product.name }}</h1>
+                    <p class="product-detail-desc">{{ product.description }}</p>
 
+                    <div class="price-wrap mb-4">
+                        {% if product.is_sale %}
+                        <span class="price-original" style="font-size:1.1rem">₹{{ product.price }}</span>
+                        <span class="price-sale" style="font-size:1.5rem">₹{{ product.sale_price }}</span>
+                        <span class="sale-badge" style="position:static;animation:none">On Sale!</span>
+                        {% else %}
+                        <span class="price-regular" style="font-size:1.5rem">₹{{ product.price }}</span>
+                        {% endif %}
+                    </div>
 
-        <div class='container'>
-            <br/><br/>
-        <div class="card mb-3" >
-  <div class="row g-0">
-    <div class="col-md-4">
-      <img src="{{product.image.url}}" class="img-fluid rounded-start" alt="...">
-    </div>
-    <div class="col-md-8">
-      <div class="card-body">
-        <center>
-        <h5 class="card-title">{{product.name}}</h5>
-        <br/>
-        <p class="card-text">{{product.description}}</p>
+                    <div class="section-divider"></div>
 
-        {% if product.is_sale %}
-                                     <strike>
-                                    ₹{{product.price}}
-                                     </strike>
-                                     &nbsp;
-                                     ₹{{product.sale_price}}
-                                    <br/><br/>
-                                    IN: {{product.category}}
-        {% else %}
-            ₹{{product.price}}
-            <br/> Id: {{ product.id }}  
-        {% endif %}
-        
-        <br/><br/>
-        <div class = "row justify-content-center">
-          <div class="col-md-2" >Quantity :</div>
-          <div class="col-md-2">
-            <select class="form-select form -select-sm" id="qty-cart">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-            </select>
-          </div>
+                    <!-- Quantity -->
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <label style="color:var(--text-secondary);font-size:0.9rem;font-weight:500">Quantity</label>
+                        <select class="quantity-select" id="qty-cart">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-3 flex-wrap">
+                        <button type="button" value="{{ product.id }}" class="btn btn-add-cart ripple" id="add-cart">
+                            <i class="bi bi-bag-plus me-2"></i>Add to Cart
+                        </button>
+                        <a href="{% url 'home' %}" class="btn-view" style="width:auto;padding:.75rem 1.5rem">
+                            <span><i class="bi bi-arrow-left me-1"></i>Back</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-      <br/><br/>
-        <a href='{% url 'home' %}' class='btn btn-secondary'>Home</a>
-        <button type='button' value='{{ product.id }}' class='btn btn-secondary' id='add-cart'> Add to Cart </button>
-        </center>
-      </div>
     </div>
-  </div>
-</div>    
-        </div>
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+</div>
 
-<script> 
-    $(document).on('click','#add-cart', function(e){
-      e.preventDefault();
-      $.ajax({
-        type:'POST',
-        url: '{% url 'cart-add' %}',
+<script>
+$(document).on('click', '#add-cart', function(e) {
+    e.preventDefault();
+    const btn = $(this);
+    btn.html('<i class="bi bi-hourglass-split me-2"></i>Adding...');
+    $.ajax({
+        type: 'POST',
+        url: '{% url "cart-add" %}',
         data: {
-          product_id:  $('#add-cart').val(),
-          product_qty: $('#qty-cart option:selected').text(),
-          csrfmiddlewaretoken:  '{{ csrf_token }}',
-          action: 'post'
+            product_id: btn.val(),
+            product_qty: $('#qty-cart option:selected').text(),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
         },
-        success: function(json){
-          //console.log(json)
-          document.getElementById('cart_quantity').textContent = json.quantity;
-          location.reload();
+        success: function(json) {
+            document.getElementById('cart_quantity').textContent = json.quantity;
+            btn.html('<i class="bi bi-check2-circle me-2"></i>Added!');
+            setTimeout(() => btn.html('<i class="bi bi-bag-plus me-2"></i>Add to Cart'), 1800);
+            location.reload();
         },
-        error:function(xhr,errmsg,err){}
-      })                        
+        error: function() {
+            btn.html('<i class="bi bi-bag-plus me-2"></i>Add to Cart');
+        }
     });
+});
 </script>
 
 {% endblock %}

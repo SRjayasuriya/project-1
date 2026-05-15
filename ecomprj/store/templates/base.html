@@ -1,45 +1,87 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <!-- 0000000000000000000000  main title in website name 0000000000000000000-->
-        <title>Shop Homepage - Start Bootstrap Template</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
-        <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous">
-        </script>
-    </head>
-    <body>
-        <!-- Navigation-->
-        {% include 'navbar.html' %}
-        <!-- Alert messages-->
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor%}
-            {% endif %}
-        <!-- Content-->
-        {% block content %}
-        {% endblock %}
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="{% static 'js/scripts.js' %}"></script>
-    </body>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Premium ecommerce store — shop the latest products at the best prices." />
+    <title>ShopX — Premium Store</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Original styles -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <!-- Premium animations -->
+    <link href="{% static 'css/animations.css' %}" rel="stylesheet" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!-- Page Loader -->
+<div id="page-loader">
+    <div class="loader-ring"></div>
+</div>
+
+<!-- Navigation -->
+{% include 'navbar.html' %}
+
+<!-- Alert messages -->
+{% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-dismissible fade show" role="alert">
+            <i class="bi bi-info-circle-fill me-2" style="color:var(--accent-secondary)"></i>
+            {{ message }}
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- Content -->
+{% block content %}{% endblock %}
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+            <div class="footer-brand">ShopX</div>
+            <p class="footer-text mb-0">&copy; 2025 ShopX. Crafted with <span style="color:var(--sale-color)">&#10084;</span> for premium shopping.</p>
+            <div class="d-flex gap-3">
+                <a href="#" class="footer-text" style="text-decoration:none;transition:color .2s ease" onmouseover="this.style.color='var(--accent-secondary)'" onmouseout="this.style.color=''"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="footer-text" style="text-decoration:none;transition:color .2s ease" onmouseover="this.style.color='var(--accent-secondary)'" onmouseout="this.style.color=''"><i class="bi bi-twitter-x"></i></a>
+                <a href="#" class="footer-text" style="text-decoration:none;transition:color .2s ease" onmouseover="this.style.color='var(--accent-secondary)'" onmouseout="this.style.color=''"><i class="bi bi-facebook"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core scripts -->
+<script src="{% static 'js/scripts.js' %}"></script>
+<script>
+// Page loader
+window.addEventListener('load', () => {
+    const loader = document.getElementById('page-loader');
+    setTimeout(() => loader.classList.add('hidden'), 300);
+});
+
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+        if (el.isIntersecting) {
+            el.target.classList.add('visible');
+            revealObserver.unobserve(el.target);
+        }
+    });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => revealObserver.observe(el));
+</script>
+</body>
 </html>

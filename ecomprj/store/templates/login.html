@@ -1,41 +1,49 @@
 {% extends 'base.html' %}
-
 {% block content %}
 
- <!-- Header-->
-        <header class="bg-dark py-4">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Log In To Your Account</h1>
-                    <p class="lead fw-normal text-white-50 mb-0"></p>
-                </div>
+<header class="hero-header" style="min-height:220px">
+    <div class="orb orb-1"></div>
+    <div class="container px-4">
+        <div class="hero-content text-center">
+            <h1 class="hero-title" style="font-size:clamp(1.8rem,4vw,3rem)">Welcome Back</h1>
+            <p class="hero-subtitle mt-2">Sign in to your account</p>
+        </div>
+    </div>
+</header>
+
+<div class="container px-4 py-5">
+    <div class="form-card">
+        <div class="text-center mb-4">
+            <div style="width:60px;height:60px;background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+                <i class="bi bi-person-fill" style="font-size:1.5rem;color:#fff"></i>
             </div>
-        </header>
-        <div class='container'>
-            <div class='row'>
-                <center>
-                    <div class='col-8'>
-                        <br/><br/>
-                        <br/><br/>
-                        <form method='POST' action='{% url 'login' %}'>
-                            <!-- this value will change everytime so that hacker cannot track it-->
-                            {% csrf_token %}
-    
-                            <div class="mb-3">
-                                <input type="text" class="form-control" name='username' placeholder='Enter Your Username'>         
-                            </div>
-                            <div class="mb-3">
-                                <input type="password" class="form-control" name='password' placeholder='Enter Your Password'>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Login</button>
-                        </form> 
-                <br/><br/>
-                <br/><br/>
-                <br/><br/>
-                <br/><br/>
-                </center>
-            </div>
+            <h2 class="form-title">Log In</h2>
+            <p class="form-subtitle">Enter your credentials to continue</p>
         </div>
 
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label style="font-size:.85rem;color:var(--text-secondary);font-weight:500;margin-bottom:.4rem;display:block">
+                    <i class="bi bi-person me-1"></i>Username
+                </label>
+                <input type="text" class="form-control" name="username" placeholder="Enter your username" />
+            </div>
+            <div class="mb-4">
+                <label style="font-size:.85rem;color:var(--text-secondary);font-weight:500;margin-bottom:.4rem;display:block">
+                    <i class="bi bi-lock me-1"></i>Password
+                </label>
+                <input type="password" class="form-control" name="password" placeholder="Enter your password" />
+            </div>
+            <button type="submit" class="btn btn-primary-custom ripple w-100">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+            </button>
+            <p class="text-center mt-3" style="font-size:.85rem;color:var(--text-muted)">
+                Don't have an account?
+                <a href="{% url 'register' %}" style="color:var(--accent-secondary);text-decoration:none;font-weight:600">Register</a>
+            </p>
+        </form>
+    </div>
+</div>
 
 {% endblock %}
